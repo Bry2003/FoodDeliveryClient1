@@ -1,0 +1,35 @@
+using System.Collections.Generic;
+using System.Data.SqlClient;
+
+namespace FoodDeliveryData
+{
+    public class FoodDbData
+    {
+        private string connectionString = "Your_Connection_String";
+
+        public List<Food> GetAvailableFoods()
+        {
+            // Implement logic to fetch available foods from the database
+        }
+
+        public int PlaceOrder(Order order)
+        {
+            // Implement logic to insert an order into the database
+        }
+
+        public List<Order> GetOrdersByCustomer(string customerName)
+        {
+            // Implement logic to fetch orders by customer name from the database
+        }
+
+        public int UpdateOrder(Order order)
+        {
+            // Implement logic to update an existing order in the database
+        }
+
+        public int CancelOrder(int orderId)
+        {
+            // Implement logic to cancel an order in the database
+        }
+    }
+}
