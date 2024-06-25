@@ -1,0 +1,53 @@
+using Microsoft.AspNetCore.Mvc;
+using FoodDeliveryModels;
+using FoodDeliveryServices;
+
+namespace AccountManagement.API.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FoodController : ControllerBase
+    {
+        private readonly FoodDeliveryServices _services;
+
+        public FoodController(FoodDeliveryServices services)
+        {
+            _services = services;
+        }
+
+        [HttpGet("available")]
+        public IActionResult GetAvailableFoods()
+        {
+            var foods = _services.GetAvailableFoods();
+            return Ok(foods);
+        }
+
+        [HttpPost("order")]
+        public IActionResult PlaceOrder(Order order)
+        {
+            var result = _services.PlaceOrder(order);
+            return Ok(result);
+        }
+
+        [HttpGet("orders/{customerName}")]
+        public IActionResult GetOrdersByCustomer(string customerName)
+        {
+            var orders = _services.GetOrdersByCustomer(customerName);
+            return Ok(orders);
+        }
+
+        [HttpPut("order")]
+        public IActionResult UpdateOrder(Order order)
+        {
+            var result = _services.UpdateOrder(order);
+            return Ok(result);
+        }
+
+        [HttpDelete("order/{orderId}")]
+        public IActionResult CancelOrder(int orderId)
+        {
+            var result = _services.CancelOrder(orderId);
+            return Ok(result);
+        }
+    }
+}
