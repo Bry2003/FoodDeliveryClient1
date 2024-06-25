@@ -1,0 +1,57 @@
+using System;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using FoodDeliveryModels;
+
+namespace FoodDeliveryClient
+{
+    internal class Program
+    {
+        static async Task Main(string[] args)
+        {
+            using HttpClient client = new HttpClient { BaseAddress = new Uri("https://localhost:5001/api/") };
+
+            // Example: Get available foods
+            var availableFoods = await client.GetFromJsonAsync<List<Food>>("food/available");
+            foreach (var food in availableFoods)
+            {
+                Console.WriteLine($"Food: {food.Name}, Price: {food.Price}");
+            }
+
+            // Example: Place an order
+            Order newOrder = new Order
+            {
+                CustomerName = "John Doe",
+                Foods = new List<Food> { new Food { Name = "Pizza", Price = 15.99m }, new Food { Name = "Salad", Price = 8.99m } },
+                TotalAmount = 24.98m
+            };
+            var orderPlacedResponse = await client.PostAsJsonAsync("food/order", newOrder);
+            Console.WriteLine($"Order placed: {orderPlacedResponse.IsSuccessStatusCode}");
+
+            // Example: Get orders by customer
+            var customerOrders = await client.GetFromJsonAsync<List<Order>>("food/orders/John Doe");
+            foreach (var order in customerOrders)
+            {
+                Console.WriteLine($"Order ID: {order.Id}, Total Amount: {order.TotalAmount}");
+            }
+
+            // Example: Update an order (mark as completed)
+            if (customerOrders.Count > 0)
+            {
+                var orderToUpdate = customerOrders[0];
+                orderToUpdate.IsCompleted = true;
+                var orderUpdatedResponse = await client.PutAsJsonAsync("food/order", orderToUpdate);
+                Console.WriteLine($"Order updated: {orderUpdatedResponse.IsSuccessStatusCode}");
+            }
+
+            // Example: Cancel an order
+            if (customerOrders.Count > 1)
+            {
+                int orderIdToCancel = customerOrders[1].Id;
+                var orderCancelledResponse = await client.DeleteAsync($"food/order/{orderIdToCancel}");
+                Console.WriteLine($"Order cancelled: {orderCancelledResponse.IsSuccessStatusCode}");
+            }
+        }
+    }
+}
