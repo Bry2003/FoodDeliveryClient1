@@ -1,0 +1,41 @@
+using System;
+using System.Collections.Generic;
+
+namespace FoodDeliveryServices
+{
+    public class FoodDeliveryServices
+    {
+        private FoodDbData foodDbData = new FoodDbData();
+
+        public List<Food> GetAvailableFoods()
+        {
+            return foodDbData.GetAvailableFoods();
+        }
+
+        public bool PlaceOrder(Order order)
+        {
+            // Implement validation or additional logic before placing an order
+            order.OrderDate = DateTime.Now;
+            order.IsCompleted = false;
+
+            return foodDbData.PlaceOrder(order) > 0;
+        }
+
+        public List<Order> GetOrdersByCustomer(string customerName)
+        {
+            return foodDbData.GetOrdersByCustomer(customerName);
+        }
+
+        public bool UpdateOrder(Order order)
+        {
+            // Implement validation or additional logic before updating an order
+            return foodDbData.UpdateOrder(order) > 0;
+        }
+
+        public bool CancelOrder(int orderId)
+        {
+            // Implement validation or additional logic before canceling an order
+            return foodDbData.CancelOrder(orderId) > 0;
+        }
+    }
+}
